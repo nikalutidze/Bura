@@ -56,7 +56,7 @@ export function Scoreboard({ players, rounds }: ScoreboardProps) {
           {rounds.length === 0 ? (
             <tr>
               <td colSpan={players.length} className="px-4 py-8 text-center text-sm text-muted-foreground">
-                ჯერ ხეობები არ არის შეყვანილი.
+                ჯერ ქულები არ არის შეყვანილი.
               </td>
             </tr>
           ) : (
