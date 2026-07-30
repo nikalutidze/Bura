@@ -10,6 +10,7 @@ export type GameData = {
 
 export const STORAGE_KEY = "buragame_data"
 export const PLAYER_COUNT = 4
+export const KHISHTI_PENALTY = -120
 
 export function emptyGame(): GameData {
   return { players: [], rounds: [] }
@@ -46,7 +47,10 @@ export function computeTotals(rounds: Round[]) {
   for (const round of rounds) {
     for (let i = 0; i < PLAYER_COUNT; i++) {
       totals[i] += round.scores[i] ?? 0
-      if (round.khishti[i]) khishtiCounts[i]++
+      if (round.khishti[i]) {
+        khishtiCounts[i]++
+        totals[i] += KHISHTI_PENALTY
+      }
     }
   }
   return { totals, khishtiCounts }

@@ -68,7 +68,7 @@ export function Scoreboard({ players, rounds }: ScoreboardProps) {
                   <td key={i} className="border-b border-border px-1 py-2.5 text-center">
                     <span className="font-mono text-base tabular-nums">{score}</span>
                     {round.khishti[i] && (
-                      <span className="block text-[0.7rem] font-bold text-destructive">ხიშტი</span>
+                      <span className="block text-[0.7rem] font-bold text-destructive">ხიშტი −120</span>
                     )}
                   </td>
                 ))}
