@@ -19,18 +19,16 @@ export function Scoreboard({ players, rounds }: ScoreboardProps) {
       <table className="w-full border-collapse">
         <thead>
           <tr>
-            {players.map((p, idx) => (
-              <th
-                key={idx}
-                className="border-b border-border px-1 py-3 text-center text-sm font-semibold text-primary"
-              >
-                <span className="line-clamp-1 px-1">{p}</span>
+            {players.map((player, idx) => (
+              <th key={idx} className="border-b border-border px-1 py-3 text-center text-sm font-semibold text-primary">
+                <span className="line-clamp-1 px-1">{player}</span>
               </th>
             ))}
           </tr>
           <tr className="bg-secondary/60">
-            {totals.map((t, idx) => {
-              const isLeader = hasScores && t === maxTotal
+            {totals.map((total, idx) => {
+              const isLeader = hasScores && total === maxTotal
+
               return (
                 <td
                   key={idx}
@@ -40,11 +38,11 @@ export function Scoreboard({ players, rounds }: ScoreboardProps) {
                   )}
                 >
                   <div className="flex items-center justify-center gap-1 font-mono text-2xl font-bold tabular-nums">
-                    {isLeader && <Crown className="size-4 text-primary" aria-label="ლიდერი" />}
-                    {t}
+                    {isLeader && <Crown className="size-4 text-primary" aria-label="Leader" />}
+                    {total}
                   </div>
                   <span className="mt-0.5 block text-[0.7rem] text-muted-foreground">
-                    {`${khishtiCounts[idx]} ხიშტი`}
+                    {`${khishtiCounts[idx]} khishti`}
                   </span>
                 </td>
               )
@@ -54,21 +52,18 @@ export function Scoreboard({ players, rounds }: ScoreboardProps) {
         <tbody>
           {rounds.length === 0 ? (
             <tr>
-              <td
-                colSpan={players.length}
-                className="px-4 py-8 text-center text-sm text-muted-foreground"
-              >
-                ჯერ არცერთი რაუნდი არ ჩაწერილა
+              <td colSpan={players.length} className="px-4 py-8 text-center text-sm text-muted-foreground">
+                No rounds entered yet.
               </td>
             </tr>
           ) : (
-            rounds.map((round, rIdx) => (
-              <tr key={rIdx} className="odd:bg-background/30">
-                {round.scores.map((score, i) => (
-                  <td key={i} className="border-b border-border px-1 py-2.5 text-center">
+            rounds.map((round, roundIndex) => (
+              <tr key={roundIndex} className="odd:bg-background/30">
+                {round.scores.map((score, playerIndex) => (
+                  <td key={playerIndex} className="border-b border-border px-1 py-2.5 text-center">
                     <span className="font-mono text-base tabular-nums">{score}</span>
-                    {round.khishti[i] && (
-                      <span className="block text-[0.7rem] font-bold text-destructive">ხიშტი −120</span>
+                    {round.khishti[playerIndex] && (
+                      <span className="block text-[0.7rem] font-bold text-destructive">khishti -120</span>
                     )}
                   </td>
                 ))}
