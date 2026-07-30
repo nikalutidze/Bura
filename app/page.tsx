@@ -54,8 +54,8 @@ export default function Page() {
 
     const hasRounds = game.rounds.length > 0
     const message = hasRounds
-      ? "Finish this game, update the leaderboard, and start a new game?"
-      : "Start a new game?"
+      ? "დასრულდეს თამაში, განახლდეს ლიდერბორდი და ახალი თამაში დაიწყოს?"
+      : "დაიწყოს ახალი თამაში?"
 
     if (!window.confirm(message)) return
 
@@ -68,16 +68,20 @@ export default function Page() {
   }
 
   function resetLeaderboard() {
-    if (!window.confirm("Reset the full leaderboard?")) return
+    if (!window.confirm("მთელი ლიდერბორდის გასუფთავება?")) return
     clearLeaderboard()
     setLeaderboard([])
   }
 
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-lg flex-col gap-4 px-3 py-5">
-      <header className="border-b-2 border-border pb-4 text-center">
-        <h1 className="text-2xl font-bold tracking-tight text-primary text-balance">Bura Scoreboard</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Pick players, enter rounds, track winners.</p>
+      <header className="border-b-2 border-border/60 pb-4 text-center">
+        <h1 className="text-2xl font-bold tracking-tight text-primary text-balance">
+          წერითი ბურა
+        </h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          აირჩიე მოთამაშეები, შეიყვანე ხეობები, დაითვალე გამარჯვებულები.
+        </p>
       </header>
 
       {!loaded ? null : (

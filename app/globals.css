@@ -38,38 +38,38 @@
 :root {
   color-scheme: dark;
 
-  /* Deep felt-table slate */
-  --background: oklch(0.19 0.03 250);
-  --foreground: oklch(0.98 0.005 250);
+  /* Deep felt-table green */
+  --background: oklch(0.16 0.035 155);
+  --foreground: oklch(0.97 0.01 95);
 
-  --card: oklch(0.25 0.03 250);
-  --card-foreground: oklch(0.98 0.005 250);
+  --card: oklch(0.22 0.038 155);
+  --card-foreground: oklch(0.97 0.01 95);
 
-  --popover: oklch(0.25 0.03 250);
-  --popover-foreground: oklch(0.98 0.005 250);
+  --popover: oklch(0.22 0.038 155);
+  --popover-foreground: oklch(0.97 0.01 95);
 
-  /* Emerald accent */
-  --primary: oklch(0.72 0.16 160);
-  --primary-foreground: oklch(0.2 0.03 160);
+  /* Gold accent */
+  --primary: oklch(0.82 0.14 85);
+  --primary-foreground: oklch(0.2 0.04 85);
 
-  --secondary: oklch(0.3 0.03 250);
-  --secondary-foreground: oklch(0.98 0.005 250);
+  --secondary: oklch(0.28 0.035 155);
+  --secondary-foreground: oklch(0.97 0.01 95);
 
-  --muted: oklch(0.3 0.03 250);
-  --muted-foreground: oklch(0.72 0.02 250);
+  --muted: oklch(0.28 0.035 155);
+  --muted-foreground: oklch(0.72 0.02 155);
 
-  --accent: oklch(0.72 0.16 160);
-  --accent-foreground: oklch(0.2 0.03 160);
+  --accent: oklch(0.82 0.14 85);
+  --accent-foreground: oklch(0.2 0.04 85);
 
   /* Khishti red */
-  --destructive: oklch(0.64 0.22 25);
+  --destructive: oklch(0.62 0.22 25);
   --destructive-foreground: oklch(0.98 0.01 25);
 
-  --border: oklch(0.35 0.03 250);
-  --input: oklch(0.35 0.03 250);
-  --ring: oklch(0.72 0.16 160);
+  --border: oklch(0.32 0.03 155);
+  --input: oklch(0.3 0.03 155);
+  --ring: oklch(0.82 0.14 85);
 
-  --radius: 0.75rem;
+  --radius: 0.875rem;
 }
 
 @layer base {
@@ -78,5 +78,57 @@
   }
   body {
     @apply bg-background text-foreground;
+    background-image: radial-gradient(
+      circle at 50% -10%,
+      oklch(0.24 0.045 155 / 0.5),
+      transparent 55%
+    );
+    background-attachment: fixed;
+  }
+}
+
+@layer utilities {
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.92) translateY(6px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.02) translateY(0);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-pop-in {
+  animation: pop-in 0.32s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.28s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-pop-in,
+  .animate-fade-up {
+    animation: none;
   }
 }
