@@ -1,47 +1,68 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import { SetupScreen } from "@/components/setup-screen"
+import { Scoreboard } from "@/components/scoreboard"
+import { RoundInput } from "@/components/round-input"
+import { clearGame, loadGame, saveGame, type GameData, type Round } from "@/lib/bura"
+
 export default function Page() {
+  const [game, setGame] = useState<GameData | null>(null)
+  const [loaded, setLoaded] = useState(false)
+
+  // Load persisted game on mount
+  useEffect(() => {
+    setGame(loadGame())
+    setLoaded(true)
+  }, [])
+
+  // Persist whenever the game changes
+  useEffect(() => {
+    if (game) saveGame(game)
+  }, [game])
+
+  function startGame(players: string[]) {
+    setGame({ players, rounds: [] })
+  }
+
+  function addRound(round: Round) {
+    setGame((prev) => (prev ? { ...prev, rounds: [...prev.rounds, round] } : prev))
+  }
+
+  function undoLastRound() {
+    setGame((prev) => (prev ? { ...prev, rounds: prev.rounds.slice(0, -1) } : prev))
+  }
+
+  function resetGame() {
+    if (window.confirm("ნამდვილად გსურთ ახალი თამაშის დაწყება? მიმდინარე ქულები წაიშლება.")) {
+      clearGame()
+      setGame(null)
+    }
+  }
+
   return (
-    <main
-      style={{
-        colorScheme: 'light dark',
-        position: 'relative',
-        display: 'flex',
-        minHeight: '100vh',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'light-dark(#fff, #000)',
-        color: 'light-dark(#000, #fff)',
-      }}
-    >
-      <svg
-        aria-hidden="true"
-        style={{ width: 80, height: 80 }}
-        width={80}
-        height={80}
-        fill="none"
-        viewBox="0 0 20 20"
-        xmlns="http://www.w3.org/2000/svg"
-        stroke="currentColor"
-        strokeWidth="0.5"
-      >
-        <path
-          d="M14.2 14.2H17V6.9375C17 4.76288 15.2371 3 13.0625 3H5.8V5.8M14.2 14.2V7.79063L7.79062 14.2H14.2ZM14.2 14.2V17H6.9375C4.76288 17 3 15.2371 3 13.0625V5.8H5.8M5.8 5.8V12.2313L12.2313 5.8H5.8Z"
-          strokeLinejoin="round"
-        />
-      </svg>
-      <p
-        style={{
-          position: 'absolute',
-          left: '50%',
-          top: 'calc(50% + 56px)',
-          transform: 'translateX(-50%)',
-          whiteSpace: 'nowrap',
-          fontSize: '14px',
-          fontWeight: 500,
-          color: 'light-dark(#71717a, #a1a1aa)',
-        }}
-      >
-        Your v0 generation will show here.
-      </p>
+    <main className="mx-auto flex min-h-dvh w-full max-w-lg flex-col gap-4 px-3 py-5">
+      <header className="border-b-2 border-border pb-4 text-center">
+        <h1 className="text-2xl font-bold tracking-tight text-primary text-balance">
+          წერითი ბურა
+        </h1>
+        <p className="mt-1 text-sm text-muted-foreground">ქულების დაფა</p>
+      </header>
+
+      {!loaded ? null : !game ? (
+        <SetupScreen onStart={startGame} />
+      ) : (
+        <>
+          <Scoreboard players={game.players} rounds={game.rounds} />
+          <RoundInput
+            players={game.players}
+            onAddRound={addRound}
+            onUndo={undoLastRound}
+            onReset={resetGame}
+            canUndo={game.rounds.length > 0}
+          />
+        </>
+      )}
     </main>
   )
 }
