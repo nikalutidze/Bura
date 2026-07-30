@@ -80,7 +80,7 @@ export default function Page() {
           წერითი ბურა
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          აირჩიე მოთამაშეები, შეიყვანე ხეობები, დაითვალე გამარჯვებულები.
+          აირჩიე მოთამაშეები, შეიყვანე ქულები, დაითვალე გამარჯვებულები.
         </p>
       </header>
 
