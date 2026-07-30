@@ -10,7 +10,7 @@ type ScoreboardProps = {
 }
 
 export function Scoreboard({ players, rounds }: ScoreboardProps) {
-  const { totals, khishtiCounts } = computeTotals(rounds)
+  const { totals, khishtiCounts } = computeTotals(rounds, players.length)
   const maxTotal = Math.max(...totals)
   const hasScores = rounds.length > 0
 

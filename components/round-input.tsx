@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { PLAYER_COUNT, type Round } from "@/lib/bura"
+import { ROUND_TOTAL, type Round } from "@/lib/bura"
 import { cn } from "@/lib/utils"
 import { Undo2, RotateCcw } from "lucide-react"
 
@@ -14,17 +14,15 @@ type RoundInputProps = {
   canUndo: boolean
 }
 
-function emptyInputs() {
+function emptyInputs(count: number) {
   return {
-    scores: Array.from({ length: PLAYER_COUNT }, () => "") as string[],
-    khishti: Array.from({ length: PLAYER_COUNT }, () => false) as boolean[],
+    scores: Array.from({ length: count }, () => "") as string[],
+    khishti: Array.from({ length: count }, () => false) as boolean[],
   }
 }
 
-const ROUND_TOTAL = 120
-
 export function RoundInput({ players, onAddRound, onUndo, onReset, canUndo }: RoundInputProps) {
-  const [inputs, setInputs] = useState(emptyInputs)
+  const [inputs, setInputs] = useState(() => emptyInputs(players.length))
 
   const sum = inputs.scores.reduce((acc, s) => acc + (Number.parseInt(s) || 0), 0)
   const isValid = sum === ROUND_TOTAL
@@ -36,7 +34,7 @@ export function RoundInput({ players, onAddRound, onUndo, onReset, canUndo }: Ro
       khishti: [...inputs.khishti],
     }
     onAddRound(round)
-    setInputs(emptyInputs())
+    setInputs(emptyInputs(players.length))
   }
 
   return (

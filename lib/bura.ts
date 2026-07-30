@@ -9,8 +9,11 @@ export type GameData = {
 }
 
 export const STORAGE_KEY = "buragame_data"
-export const PLAYER_COUNT = 4
+export const MIN_PLAYERS = 3
+export const MAX_PLAYERS = 4
+export const DEFAULT_PLAYERS = 4
 export const KHISHTI_PENALTY = -120
+export const ROUND_TOTAL = 120
 
 export function emptyGame(): GameData {
   return { players: [], rounds: [] }
@@ -22,7 +25,11 @@ export function loadGame(): GameData | null {
     const saved = window.localStorage.getItem(STORAGE_KEY)
     if (!saved) return null
     const data = JSON.parse(saved) as GameData
-    if (Array.isArray(data.players) && data.players.length === PLAYER_COUNT) {
+    if (
+      Array.isArray(data.players) &&
+      data.players.length >= MIN_PLAYERS &&
+      data.players.length <= MAX_PLAYERS
+    ) {
       return { players: data.players, rounds: Array.isArray(data.rounds) ? data.rounds : [] }
     }
   } catch {
@@ -41,11 +48,11 @@ export function clearGame() {
   window.localStorage.removeItem(STORAGE_KEY)
 }
 
-export function computeTotals(rounds: Round[]) {
-  const totals = new Array(PLAYER_COUNT).fill(0)
-  const khishtiCounts = new Array(PLAYER_COUNT).fill(0)
+export function computeTotals(rounds: Round[], playerCount: number) {
+  const totals = new Array(playerCount).fill(0)
+  const khishtiCounts = new Array(playerCount).fill(0)
   for (const round of rounds) {
-    for (let i = 0; i < PLAYER_COUNT; i++) {
+    for (let i = 0; i < playerCount; i++) {
       totals[i] += round.scores[i] ?? 0
       if (round.khishti[i]) {
         khishtiCounts[i]++
