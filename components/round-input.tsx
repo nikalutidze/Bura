@@ -21,10 +21,16 @@ function emptyInputs() {
   }
 }
 
+const ROUND_TOTAL = 120
+
 export function RoundInput({ players, onAddRound, onUndo, onReset, canUndo }: RoundInputProps) {
   const [inputs, setInputs] = useState(emptyInputs)
 
+  const sum = inputs.scores.reduce((acc, s) => acc + (Number.parseInt(s) || 0), 0)
+  const isValid = sum === ROUND_TOTAL
+
   function handleAdd() {
+    if (!isValid) return
     const round: Round = {
       scores: inputs.scores.map((s) => Number.parseInt(s) || 0),
       khishti: [...inputs.khishti],
@@ -79,7 +85,26 @@ export function RoundInput({ players, onAddRound, onUndo, onReset, canUndo }: Ro
         ))}
       </div>
 
-      <Button onClick={handleAdd} className="mt-4 w-full text-base font-bold" size="lg">
+      <div
+        className={cn(
+          "mt-3 flex items-center justify-between rounded-xl border px-3 py-2 text-sm font-semibold transition",
+          isValid
+            ? "border-primary/50 bg-primary/10 text-primary"
+            : "border-destructive/50 bg-destructive/10 text-destructive",
+        )}
+      >
+        <span>ჯამი</span>
+        <span className="font-mono text-base">
+          {sum} / {ROUND_TOTAL}
+        </span>
+      </div>
+
+      <Button
+        onClick={handleAdd}
+        disabled={!isValid}
+        className="mt-3 w-full text-base font-bold"
+        size="lg"
+      >
         ქულების ჩაწერა
       </Button>
 
