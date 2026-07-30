@@ -50,7 +50,7 @@ export function RoundInput({ players, onAddRound, onUndo, onReset, canUndo }: Ro
     <section className="animate-fade-up rounded-3xl border border-border/60 bg-card/80 p-4 shadow-2xl backdrop-blur-sm sm:p-5">
       <h3 className="mb-3 flex items-center gap-2 text-base font-bold">
         <Plus className="size-4 text-primary" />
-        ახალი ხეობა
+        
       </h3>
 
       <div className="grid grid-cols-2 gap-2.5">
