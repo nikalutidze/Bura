@@ -159,7 +159,7 @@ export function RoundInput({ players, onAddRound, onUndo, onReset, canUndo }: Ro
         className="mt-3 w-full bg-gradient-to-r from-primary to-accent text-base font-bold shadow-lg shadow-primary/20"
         size="lg"
       >
-        ხეობის დამატება
+        ქულების ჩაწერა
       </Button>
 
       <div className="mt-3 flex gap-2">
