@@ -24,13 +24,24 @@ function emptyInputs(count: number) {
 export function RoundInput({ players, onAddRound, onUndo, onReset, canUndo }: RoundInputProps) {
   const [inputs, setInputs] = useState(() => emptyInputs(players.length))
 
-  const sum = inputs.scores.reduce((acc, s) => acc + (Number.parseInt(s) || 0), 0)
+  // Auto-fill the single remaining empty field so the round totals 120.
+  const emptyIndexes = inputs.scores.map((s, i) => (s.trim() === "" ? i : -1)).filter((i) => i >= 0)
+  const autoIndex = emptyIndexes.length === 1 ? emptyIndexes[0] : -1
+  const filledSum = inputs.scores.reduce((acc, s) => acc + (Number.parseInt(s) || 0), 0)
+  const autoValue = ROUND_TOTAL - filledSum
+
+  // Effective scores include the auto-filled value.
+  const effectiveScores = inputs.scores.map((s, i) =>
+    i === autoIndex && autoValue >= 0 ? String(autoValue) : s,
+  )
+
+  const sum = effectiveScores.reduce((acc, s) => acc + (Number.parseInt(s) || 0), 0)
   const isValid = sum === ROUND_TOTAL
 
   function handleAdd() {
     if (!isValid) return
     const round: Round = {
-      scores: inputs.scores.map((s) => Number.parseInt(s) || 0),
+      scores: effectiveScores.map((s) => Number.parseInt(s) || 0),
       khishti: [...inputs.khishti],
     }
     onAddRound(round)
@@ -42,10 +53,13 @@ export function RoundInput({ players, onAddRound, onUndo, onReset, canUndo }: Ro
       <h3 className="mb-3 text-base font-bold">ახალი რაუნდი</h3>
 
       <div className="grid grid-cols-2 gap-3">
-        {players.map((p, idx) => (
+        {players.map((p, idx) => {
+          const isAuto = idx === autoIndex && autoValue >= 0
+          return (
           <div key={idx} className="rounded-xl border border-border bg-background/50 p-3">
-            <label htmlFor={`score-${idx}`} className="mb-1.5 block truncate text-sm font-semibold">
-              {p}
+            <label htmlFor={`score-${idx}`} className="mb-1.5 flex items-center justify-between gap-1 truncate text-sm font-semibold">
+              <span className="truncate">{p}</span>
+              {isAuto && <span className="shrink-0 text-[0.7rem] font-medium text-primary">ავტო</span>}
             </label>
             <input
               id={`score-${idx}`}
@@ -53,13 +67,17 @@ export function RoundInput({ players, onAddRound, onUndo, onReset, canUndo }: Ro
               inputMode="numeric"
               min={0}
               placeholder="ქულა"
-              value={inputs.scores[idx]}
+              readOnly={isAuto}
+              value={isAuto ? String(autoValue) : inputs.scores[idx]}
               onChange={(e) => {
                 const next = { ...inputs, scores: [...inputs.scores] }
                 next.scores[idx] = e.target.value
                 setInputs(next)
               }}
-              className="w-full rounded-md border border-input bg-background px-2.5 py-2 font-mono text-base text-foreground outline-none transition focus:border-ring focus:ring-2 focus:ring-ring/40"
+              className={cn(
+                "w-full rounded-md border border-input bg-background px-2.5 py-2 font-mono text-base text-foreground outline-none transition focus:border-ring focus:ring-2 focus:ring-ring/40",
+                isAuto && "border-primary/50 bg-primary/10 text-primary",
+              )}
             />
             <label
               className={cn(
@@ -80,7 +98,8 @@ export function RoundInput({ players, onAddRound, onUndo, onReset, canUndo }: Ro
               ხიშტი
             </label>
           </div>
-        ))}
+          )
+        })}
       </div>
 
       <div
